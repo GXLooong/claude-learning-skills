@@ -96,6 +96,46 @@ Determine where the new content belongs:
 
 These are not mutually exclusive. A single source may warrant merging into one article while also creating a separate article for a distinct concept it introduces. In all cases, check for factual conflicts: if the new source contradicts existing content, annotate the disagreement with source attribution. When merging, note the conflict within the merged article. When the conflicting content lives in separate articles, note it in both and cross-link them.
 
+#### Merge Rules for "Same Topic, New Conversation" (Repeated Learning)
+
+This is the most common case: the user has a new conversation about a topic they already have a wiki article for. The raw is a separate file (different date), the wiki article gets updated. Here's exactly how:
+
+**1. Raw file** → Always a new file. `raw/<topic>/<new-date>-<slug>.md`. Never modify old raw files.
+
+**2. Wiki — Sources & Raw fields** → Append the new raw file link to Sources and Raw fields in the wiki article header (semicolon-separated).
+
+**3. Wiki — 知识概要 (Knowledge Summary)** → Only update if the new conversation introduces a genuinely new concept. If it's just deeper exploration of existing concepts, leave the summary as-is.
+
+**4. Wiki — 你的提问脉络 (Question Thread)** → **Always append.** Add new questions to the relevant concept group(s). If a concept group already has questions from a previous conversation, add the new ones at the end with the new date prefix:
+   ```markdown
+   ### Concept Name
+   *2026-06-27:* 1. "earlier question" — depth assessment
+   *2026-06-28:* 15. "new question" — updated depth assessment
+   ```
+   Never delete old questions — they are the historical record of the user's learning trajectory.
+
+**5. Wiki — 💭 你的理解 (Personal Understanding)** → **Append with date layer.** Do NOT overwrite old understanding. Add a new dated subsection:
+   ```markdown
+   ## 💭 你的理解
+   
+   ### 2026-06-28（新对话）
+   - [new insights, questions, breakthroughs]
+   
+   ### 2026-06-27
+   - [previous understanding preserved]
+   ```
+   This preserves the evolution of understanding over time.
+
+**6. Wiki — See Also** → Check if new cross-references are needed. Add if the new conversation linked to other concepts not previously referenced.
+
+**7. profile.md — 学习时间线** → Append a new entry under the new date. If the user's questions in the new conversation show deeper thinking, upgrade the depth marker (surface→working, working→deep).
+
+**8. wiki/index.md** → Refresh the Updated date for the modified article.
+
+**9. wiki/log.md** → Append the operation record.
+
+**10. Raw index** → If the new raw is a conversation >200KB, add a 对话索引 at the top.
+
 See `references/article-template.md` for article format. Key points:
 - Sources field: author, organization, or publication name + date, semicolon-separated.
 - Raw field: markdown links to raw/ files, semicolon-separated.
