@@ -11,6 +11,21 @@ Core ideas from Karpathy:
 - "The LLM writes and maintains the wiki; the human reads and asks questions."
 - "The wiki is a persistent, compounding artifact."
 
+## Relationship with learning-companion
+
+This skill is the **knowledge librarian** — it handles storage, retrieval, and maintenance. For **teaching and learning**, use `learning-companion`. The two skills share the same wiki directory and collaborate:
+
+| Task | Use |
+|------|-----|
+| Save/ingest content to wiki | karpathy-llm-wiki |
+| Query wiki knowledge | karpathy-llm-wiki |
+| Health-check the wiki | karpathy-llm-wiki |
+| Teach new concepts | learning-companion |
+| Review past learning | learning-companion |
+| Archive learning sessions | learning-companion (calls karpathy-llm-wiki for raw/wiki ops) |
+
+**Routing rule**: If the user asks to *learn*, *understand*, or *be taught* something — this is learning-companion territory. Karpathy-llm-wiki handles the *what* (knowledge storage); learning-companion handles the *how* (teaching process). Both maintain the same wiki.
+
 ## Architecture
 
 Three layers, all under the user's project root:
