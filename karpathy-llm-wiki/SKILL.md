@@ -128,7 +128,7 @@ This is the most common case: the user has a new conversation about a topic they
 
 **6. Wiki — See Also** → Check if new cross-references are needed. Add if the new conversation linked to other concepts not previously referenced.
 
-**7. profile.md — 学习时间线** → Append a new entry under the new date. If the user's questions in the new conversation show deeper thinking, upgrade the depth marker (surface→working, working→deep).
+**7. wiki/log.md** → Append a learning record under the new date with concept + depth + insight. Also update profile.md's 最近学习于 timestamp and知识地图 if needed.
 
 **8. wiki/index.md** → Refresh the Updated date for the modified article.
 
@@ -193,6 +193,18 @@ Archive pages are never cascade-updated (they are point-in-time snapshots).
 
 ### Post-Ingest
 
+**Archive write order (must follow this sequence):**
+
+```
+1. raw/ 文件            ← 先落地原始素材（只写不读，最安全）
+2. wiki/[topic]/*.md    ← 再编译/更新 wiki 文章（核心产出）
+3. wiki/index.md        ← 更新目录卡片
+4. wiki/log.md          ← 记录操作
+5. wiki/profile.md      ← 最后更新画像（依赖前几步结论）
+```
+
+This order ensures: even if interrupted mid-way, raw and wiki are complete. Missing index entries can be fixed by lint; missing log entries can be added later.
+
 Update `wiki/index.md`: add or update entries for every touched article. When adding a new topic section, include a one-line description. The Updated date reflects when the article's knowledge content last changed, not the file system timestamp. See `references/index-template.md` for format.
 
 Append to `wiki/log.md`:
@@ -241,24 +253,24 @@ When the user explicitly asks to archive or save the answer to the wiki:
 
 When user asks to review learning by date (e.g., "what did I learn yesterday?", "回顾昨天的学习", "最近学了什么"), answer by querying the wiki's time-based records.
 
-**How the wiki stores time information (three layers of granularity):**
+**How the wiki stores time information (two layers of granularity):**
 
 | Layer | File | Format | What it answers |
 |-------|------|--------|----------------|
-| Operations | `wiki/log.md` | `## YYYY-MM-DD operation \| details` | "What operations happened on [date]?" |
+| Operations + Learning | `wiki/log.md` | `## YYYY-MM-DD operation \| details` | "What happened on [date]?" |
 | Articles | `wiki/index.md` | `Updated: YYYY-MM-DD` per entry | "Which articles changed on [date]?" |
-| Learning timeline | `wiki/profile.md` | `### YYYY-MM-DD` with concepts learned | "What concepts did I master on [date]?" |
+
+log.md is the primary source for time-based queries — it records both operations (ingest/lint) and learning sessions (concepts + depth + insights).
 
 **Query procedure:**
 
 1. **Parse the date reference**: "yesterday" → today-1, "last week" → range, "2026-06-26" → exact date.
 
-2. **Query in order of specificity**:
-   - First: Read `wiki/log.md`, grep for `## YYYY-MM-DD` entries in the target date range.
-   - Second: If `wiki/profile.md` exists, read its 学习时间线 section for concept-level records from the target dates.
-   - Third: As supplement, check `wiki/index.md` for articles with Updated dates in the range.
+2. **Query log.md**: grep for `## YYYY-MM-DD` entries in the target date range. This gives both what operations happened AND what concepts were learned.
 
-3. **Synthesize**: Answer with a chronological summary. Prefer profile.md's timeline for what was understood; use log.md for what operations happened; use index.md for what was touched.
+3. **Supplement with index.md**: check for articles with Updated dates in the range.
+
+4. **Synthesize**: Answer with a chronological summary from log.md. Use index.md for what was touched.
 
 4. **Be honest**: If no records exist for the queried date, say so. "Your wiki doesn't have records for [date]. The nearest entry is from [closest date]."
 
