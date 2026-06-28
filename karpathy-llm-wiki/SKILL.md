@@ -13,18 +13,26 @@ Core ideas from Karpathy:
 
 ## Relationship with learning-companion
 
-This skill is the **knowledge librarian** — it handles storage, retrieval, and maintenance. For **teaching and learning**, use `learning-companion`. The two skills share the same wiki directory and collaborate:
+**Karpathy-llm-wiki does NOT operate independently.** Every piece of knowledge preserved in this wiki is part of the user's learning journey — there is no scenario where you "just store" knowledge without considering the user's understanding.
 
-| Task | Use |
-|------|-----|
-| Save/ingest content to wiki | karpathy-llm-wiki |
-| Query wiki knowledge | karpathy-llm-wiki |
-| Health-check the wiki | karpathy-llm-wiki |
-| Teach new concepts | learning-companion |
-| Review past learning | learning-companion |
-| Archive learning sessions | learning-companion (calls karpathy-llm-wiki for raw/wiki ops) |
+When compiling wiki from any source (conversation, article, or otherwise), you MUST follow `learning-companion`'s patterns:
 
-**Routing rule**: If the user asks to *learn*, *understand*, or *be taught* something — this is learning-companion territory. Karpathy-llm-wiki handles the *what* (knowledge storage); learning-companion handles the *how* (teaching process). Both maintain the same wiki.
+1. **Conversation sources** → preserve ALL user questions as `## 你的提问脉络` (questions ARE the depth indicator)
+2. **All sources** → extract and preserve user's personal understanding as `## 💭 你的理解` (dated, append-only layers)
+3. **Detect misconception-correction trajectories** → use the `❌ 学习前的误解 → ✅ 校准后的理解 → 误解溯源` format when applicable
+4. **Follow the archive write order** → raw → wiki → index → log → profile
+
+For the full specification of these patterns, see `learning-companion` SKILL.md (Phase 3.5 for misconception detection, Phase 4 for archive format, "与 karpathy-llm-wiki 的协作" for merge rules).
+
+| Task | Primary Skill | Note |
+|------|-------------|------|
+| Store raw material | karpathy-llm-wiki | Follow learning-companion's raw organization (对话索引 for conversations) |
+| Compile wiki articles | karpathy-llm-wiki | Follow learning-companion's article structure (提问脉络 + 💭) |
+| Query wiki knowledge | karpathy-llm-wiki | — |
+| Health-check the wiki | karpathy-llm-wiki | — |
+| Teach new concepts | learning-companion | Calls karpathy-llm-wiki for storage |
+| Review past learning | learning-companion | Reads karpathy-llm-wiki's log.md |
+| Archive learning sessions | learning-companion | Delegates raw/wiki writes to karpathy-llm-wiki |
 
 ## Architecture
 
