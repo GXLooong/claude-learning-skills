@@ -55,6 +55,35 @@ Fetch a source into raw/, then compile it into wiki/. Always both steps, no exce
    - Include metadata header: source URL, collected date, published date.
    - Preserve original text. Clean formatting noise. Do not rewrite opinions.
 
+4. **If the source is a conversation/dialogue** (user-AI turns, not an article/webpage), you MUST add a **对话索引 (Conversation Index)** at the top of the raw file, right after the metadata header. This enables efficient navigation without reading the entire file:
+
+   ```markdown
+   # [Title]
+   
+   > URL: [url] | Collected: [date] | Total Turns: N | Type: conversation
+   
+   ## 对话索引
+   
+   | Turn | Question | Key Topics | Char Offset |
+   |------|----------|------------|-------------|
+   | 1 | "user's question summary" | topic1, topic2 | ~0 |
+   | 2 | "next question" | topic3 | ~5000 |
+   | 3 | "..." | ... | ~12000 |
+   ...
+   ```
+   
+   When you later need to find specific turns in a large raw file, use this index to jump to the right Char Offset. For files >200KB, the index is the ONLY efficient way to navigate.
+
+5. **When compiling wiki from conversation raw**, the wiki article's `## 你的提问脉络` section MUST include ALL user questions from the conversation. This is the primary way learning-companion judges the user's understanding depth. Format:
+
+   ```markdown
+   ## 你的提问脉络
+   
+   ### [Concept/Subtopic]
+   1. "exact user question" — 追问了 [aspect]，说明 [depth assessment]
+   2. "next question" — ...
+   ```
+
    See `references/raw-template.md` for the exact format.
 
 ### Compile (wiki/)
